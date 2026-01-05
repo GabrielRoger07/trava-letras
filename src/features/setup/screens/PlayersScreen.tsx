@@ -5,6 +5,7 @@ import { SegmentedControl } from "../../../components/ui/SegmentedControl";
 import { TextInput } from "../../../components/ui/TextInput";
 import { Button } from "../../../components/ui/Button";
 import "./PlayersScreen.css"
+import { useEffect } from "react";
 
 export default function PlayersScreen() {
     const navigate = useNavigate()
@@ -14,16 +15,22 @@ export default function PlayersScreen() {
 
     const playerCount = players.length || 2;
 
-    function handlePlayerCountChange(count: number) {
-        const newPlayers: Player[] = Array.from({ length: count }).map(
-            (_, index) => ({
-                id: crypto.randomUUID(),
-                name: players[index]?.name ?? "",
-                wins: players[index]?.wins ?? 0
-            })
-        )
+    function buildPlayers(count: number): Player[] {
+        return Array.from({ length: count }).map((_, index) => ({
+            id: players[index]?.id ?? crypto.randomUUID(),
+            name: players[index]?.name ?? "",
+            wins: players[index]?.wins ?? 0
+        }))
+    }
 
-        dispatch({ type: "SET_PLAYERS", payload: newPlayers })
+    useEffect(() => {
+        if(players.length === 0){
+            dispatch({ type: "SET_PLAYERS", payload: buildPlayers(2) })
+        }
+    }, [])
+
+    function handlePlayerCountChange(count: number) {
+        dispatch({ type: "SET_PLAYERS", payload: buildPlayers(count) })
     }
 
     function handleNameChange(index: number, name: string) {
@@ -34,7 +41,7 @@ export default function PlayersScreen() {
         dispatch({type: "SET_PLAYERS", payload: updatedPlayers})
     }
 
-    const isValid = players.length >=2 && players.every((player) => player.name.trim().length > 0)
+    const isValid = players.length >= 2 && players.every((player) => player.name.trim().length > 0)
 
     return (
         <div className="page players">
