@@ -1,0 +1,25 @@
+.players {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.players__title {
+  margin: 0;
+}
+
+.players__count {
+  margin-top: 8px;
+}
+
+.players__inputs {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.players__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}
