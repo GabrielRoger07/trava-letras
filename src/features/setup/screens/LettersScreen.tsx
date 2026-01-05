@@ -2,6 +2,7 @@ import { useNavigate } from "react-router-dom"
 import { useGame } from "../../../state/useGame"
 import { useMemo } from "react";
 import { Button } from "../../../components/ui/Button";
+import "./LettersScreen.css"
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
 

@@ -177,7 +177,7 @@ export default function GameScreen() {
                 </Button>
             </div>
 
-            <div className="gameHint">Letras usadas: {usedLetters.length}/{activeLetters}</div>
+            <div className="gameHint">Letras usadas: {usedLetters.length}/{activeLetters.length}</div>
             </>
         ) : null}
         </div>
