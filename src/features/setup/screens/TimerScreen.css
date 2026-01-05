@@ -1,0 +1,19 @@
+.timer {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.timer__title {
+  margin: 0;
+}
+
+.timer__options {
+  margin-top: 8px;
+}
+
+.timer__actions {
+  display: flex;
+  gap: 12px;
+  margin-top: 8px;
+}

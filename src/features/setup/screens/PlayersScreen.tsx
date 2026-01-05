@@ -4,6 +4,7 @@ import type { Player } from "../../../state/gameTypes";
 import { SegmentedControl } from "../../../components/ui/SegmentedControl";
 import { TextInput } from "../../../components/ui/TextInput";
 import { Button } from "../../../components/ui/Button";
+import "./PlayersScreen.css"
 
 export default function PlayersScreen() {
     const navigate = useNavigate()
