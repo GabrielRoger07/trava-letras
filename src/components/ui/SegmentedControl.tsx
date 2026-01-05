@@ -15,12 +15,22 @@ export function SegmentedControl<T extends string | number>({
     options, value, onChange
 }: SegmentedControlProps<T>) {
     return (
-        <div className="segmented">
-            {options.map((option) => (
-                <button key={option.value} className={`btn ${option.value === value ? "btn-primary" : "btn-secondary"}`} onClick={() => onChange(option.value)}>
-                    {option.label}
-                </button>
-            ))}
+        <div className="segmented" role="group" aria-label="Opções">
+            {options.map((option) => {
+                const pressed = option.value === value;
+
+                return (
+                    <button 
+                        key={String(option.value)} 
+                        type="button"
+                        aria-pressed={pressed}
+                        className={pressed ? "active" : ""} 
+                        onClick={() => onChange(option.value)}
+                    >
+                        {option.label}
+                    </button>
+                )
+            })}
         </div>
     )
 }

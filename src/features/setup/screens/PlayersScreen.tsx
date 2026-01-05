@@ -1,18 +1,27 @@
+import { useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { useGame } from "../../../state/useGame";
-import type { Player } from "../../../state/gameTypes";
+import { Button } from "../../../components/ui/Button";
 import { SegmentedControl } from "../../../components/ui/SegmentedControl";
 import { TextInput } from "../../../components/ui/TextInput";
-import { Button } from "../../../components/ui/Button";
+import { useGame } from "../../../state/useGame";
+import type { Player } from "../../../state/gameTypes";
 import "./PlayersScreen.css"
-import { useEffect } from "react";
+
+function StepDots({total, current} : { total: number, current: number}) {
+    return (
+        <div className="step-dots" aria-label={`Etapa ${current} de ${total}`}>
+            {Array.from({ length: total }).map((_, index) => (
+                <span key={index} className={`step-dot ${index + 1 === current ? "active" : ""}`} aria-hidden="true" />
+            ))}
+        </div>
+    )
+}
 
 export default function PlayersScreen() {
     const navigate = useNavigate()
     const { state, dispatch } = useGame();
 
     const players = state.setup.players;
-
     const playerCount = players.length || 2;
 
     function buildPlayers(count: number): Player[] {
@@ -45,35 +54,47 @@ export default function PlayersScreen() {
 
     return (
         <div className="page players">
-            <h1 className="players__title">Jogadores</h1>
+            <header className="players__topbar">
+                <button type="button" className="players__back" onClick={() => navigate(-1)} aria-label="Voltar">←</button>
+                <StepDots total={4} current={1}/>
+                <div className="players__topbarSpacer" aria-hidden="true" />
+            </header>
 
-            <div className="players__count">
-                <SegmentedControl 
-                    options={[
-                        { label: "2", value: 2 },
-                        { label: "3", value: 3 },
-                        { label: "4", value: 4 }
-                    ]}
-                    value={playerCount}
-                    onChange={handlePlayerCountChange}
-                />
-            </div>
+            <main className="players__content">
+                <div className="players__header">
+                    <h1 className="players__title">Jogadores</h1>
+                    <p className="players__subtitle">Quantas pessoas vão jogar?</p>
+                </div>
 
-            <div className="players__inputs">
-                {players.map((player, index) => (
-                    <TextInput 
-                        key={player.id}
-                        value={player.name}
-                        placeholder={`Jogador ${index + 1}`}
-                        onChange={(value) => handleNameChange(index, value)}
+                <section className="players__count">
+                    <SegmentedControl 
+                        options={[
+                            { label: "2", value: 2 },
+                            { label: "3", value: 3 },
+                            { label: "4", value: 4 }
+                        ]}
+                        value={playerCount}
+                        onChange={handlePlayerCountChange}
                     />
-                ))}
-            </div>
+                </section>
 
-            <div className="players__actions">
-                <Button variant="secondary" onClick={() => navigate(-1)}>Voltar</Button>
-                <Button disabled={!isValid} onClick={() => navigate("/setup/timer")}>Continuar</Button>
-            </div>
+                <section className="players__inputs">
+                    {players.map((player, index) => (
+                        <TextInput 
+                            key={player.id}
+                            value={player.name}
+                            placeholder={`Jogador ${index + 1}`}
+                            onChange={(value) => handleNameChange(index, value)}
+                        />
+                    ))}
+                </section>
+            </main>
+
+            <footer className="players__footer">
+                <div className="players__footerInner">
+                    <Button variant="hero" disabled={!isValid} onClick={() => navigate("/setup/timer")}>Continuar</Button>
+                </div>
+            </footer>
         </div>
     )
 }
