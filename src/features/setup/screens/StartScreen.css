@@ -3,7 +3,6 @@
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 28px 18px;
     background: var(--bg-start);
 }
 
@@ -14,6 +13,8 @@
     flex-direction: column;
     justify-content: space-between;
     min-height: 82vh;
+    padding-inline: 16px;
+    box-sizing: border-box;
 }
 
 .start__hero {

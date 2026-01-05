@@ -53,6 +53,8 @@ export default function GameScreen() {
     const usedLetters = currentTheme?.usedLetters ?? [];
     const activeLetters = setup.activeLetters.length ? setup.activeLetters : "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
+    const hasNextTheme = game.currentThemeIndex < game.themes.length - 1;
+
     const resultText = (() => {
         if(!game.lastThemeResult) return ""
 
@@ -69,6 +71,10 @@ export default function GameScreen() {
     function pickLetter(letter: string) {
         if (game.status !== "playing") return;
         dispatch({ type: "PICK_LETTER", payload: letter });
+    }
+
+    function nextTheme() {
+        dispatch({ type: "NEXT_THEME" });
     }
 
     function exitGame() {
@@ -110,6 +116,10 @@ export default function GameScreen() {
                             </div>
                         ))}
                     </div>
+
+                    <div className="game__panelActions">
+                        <Button variant="hero" onClick={nextTheme} disabled={!hasNextTheme}>Próximo Tema</Button>
+                    </div>
                 </div>
             </main>
         ) : null}
@@ -146,7 +156,7 @@ export default function GameScreen() {
         {game.status === "playing" ? (
             <>
                 <main className="game__content">
-                    <div key={game.turn} className="game_timerWrap">
+                    <div key={game.turn} className="game__timerWrap">
                         <TurnTimerBlock
                             seconds={setup.secondsPerTurn}
                             playerName={currentPlayer?.name ?? "-"}
@@ -154,7 +164,7 @@ export default function GameScreen() {
                         />
                     </div>
 
-                    <div className="game_gridWrap">
+                    <div className="game__gridWrap">
                         <LetterGrid letters={activeLetters} usedLetters={usedLetters} onPick={pickLetter} />
                     </div>
                 </main>
