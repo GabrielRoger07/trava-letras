@@ -7,6 +7,16 @@ import "./ThemesScreen.css"
 
 const PRESET_THEMES = ["Países", "Animais", "Filmes", "Times de Futebol", "Comidas"]
 
+function StepDots({total, current} : { total: number, current: number}) {
+    return (
+        <div className="step-dots" aria-label={`Etapa ${current} de ${total}`}>
+            {Array.from({ length: total }).map((_, index) => (
+                <span key={index} className={`step-dot ${index + 1 === current ? "active" : ""}`} aria-hidden="true" />
+            ))}
+        </div>
+    )
+}
+
 function normalizeTheme(value: string) {
     return value.trim().replace(/\s+/g, " ")
 }
@@ -59,62 +69,76 @@ export default function ThemesScreen() {
         setThemes(selectedThemes.filter((t) => t !== theme))
     }
 
-    const canStart = selectedThemes.length >= 1
+    const canContinue = selectedThemes.length >= 1
 
     function next() {
-        if(!canStart) return
+        if(!canContinue) return
         navigate("/setup/letters")
     }
 
     return (
         <div className="page themes">
-            <h1 className="themes__title">Temas</h1>
-            <p className="themes_subtitle">Escolha pelo menos 1 tema</p>
+            <header className="themes__topbar">
+                <button type="button" className="themes__back" onClick={() => navigate(-1)} aria-label="Voltar">←</button>
+                <StepDots total={4} current={3}/>
+                <div className="themes__topbarSpacer" aria-hidden="true" />
+            </header>
 
-            <div className="themes__list">
-                {PRESET_THEMES.map((theme) => {
-                    const checked = selectedSet.has(theme)
-                    return (
-                        <button key={theme} type="button" className={`themes__row ${checked ? "themes__row--checked" : ""}`} onClick={() => toggleTheme(theme)}>
-                            <span className={`themes__checkbox ${checked ? "is-on" : ""}`} />
-                            <span className="themes__text">{theme}</span>
-                        </button>
-                    )
-                })}
-            </div>
-
-            <div className="themes__custom">
-                <TextInput 
-                    value={customTheme}
-                    onChange={setCustomTheme}
-                    placeholder="Tema personalizado"
-                />
-                <button type="button" className="themes__add" onClick={addCustomTheme} aria-label="Adicionar tema">
-                    +
-                </button>
-            </div>
-
-            {customSelectedThemes.length > 0 && (
-                <div className="themes__chips">
-                    {customSelectedThemes.map((t) => (
-                        <div key={t} className="themes__chip">
-                            <span className="themes__chipNext">{t}</span>
-                            <button type="button" className="themes__chipRemove" onClick={() => removeCustomTheme(t)} aria-label={`Remover ${t}`}>
-                                x
-                            </button>
-                        </div>
-                    ))}
+            <main className="themes__content">
+                <div className="themes__header">
+                    <h1 className="themes__title">Temas do Jogo</h1>
+                    <p className="themes_subtitle">Escolha pelo menos 1 tema</p>
                 </div>
-            )}
 
-            <div className="themes__count">
-                {selectedThemes.length} tema{selectedThemes.length === 1 ? "" : "s"} selecionado{selectedThemes.length === 1 ? "" : "s"}
-            </div>
+                <div className="themes__list">
+                    {PRESET_THEMES.map((theme) => {
+                        const checked = selectedSet.has(theme)
+                        return (
+                            <button key={theme} type="button" className={`themes__row ${checked ? "themes__row--checked" : ""}`} onClick={() => toggleTheme(theme)}>
+                                <span className={`themes__checkbox ${checked ? "is-on" : ""}`} aria-hidden="true" />
+                                <span className="themes__text">{theme}</span>
+                            </button>
+                        )
+                    })}
+                </div>
 
-            <div className="themes__actions">
-                <Button variant="secondary" onClick={() => navigate(-1)}>Voltar</Button>
-                <Button disabled={!canStart} onClick={next}>Continuar</Button>
-            </div>
+                <div className="themes__custom">
+                    <TextInput 
+                        value={customTheme}
+                        onChange={setCustomTheme}
+                        placeholder="Adicionar tema personalizado"
+                    />
+                    <button type="button" className="themes__add" onClick={addCustomTheme} aria-label="Adicionar tema" disabled={!normalizeTheme(customTheme)}>
+                        +
+                    </button>
+                </div>
+
+                {customSelectedThemes.length > 0 && (
+                    <div className="themes__chips">
+                        {customSelectedThemes.map((t) => (
+                            <div key={t} className="themes__chip">
+                                <span className="themes__chipNext">{t}</span>
+                                <button type="button" className="themes__chipRemove" onClick={() => removeCustomTheme(t)} aria-label={`Remover ${t}`}>
+                                    x
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+                )}
+
+                <div className="themes__countCard">
+                    <strong className="themes__countNumber">{selectedThemes.length}</strong>{" "}
+                    <span className="themes__countText">
+                        tema{selectedThemes.length === 1 ? "" : "s"} selecionado{selectedThemes.length === 1 ? "" : "s"}
+                    </span>
+                </div>
+            </main>
+
+            <footer className="themes__footer">
+                <div className="themes__footerInner">
+                    <Button variant="hero" disabled={!canContinue} onClick={next}>Continuar</Button>
+                </div>
+            </footer>
         </div>
     )
 }
