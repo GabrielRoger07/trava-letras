@@ -16,10 +16,9 @@ export type ThemeState = {
     usedLetters: string[];
 }
 
-export type LastThemeResult = {
-    loserIndex: number,
-    winnerIndexes: number[]
-}
+export type LastThemeResult = 
+    | { type: "tie"}
+    | { type: "loss"; loserIndex: number, winnerIndexes: number[] }
 
 export type GameState = {
     currentPlayerIndex: number;

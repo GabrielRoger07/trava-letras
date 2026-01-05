@@ -53,12 +53,17 @@ export default function GameScreen() {
 
     const hasNextTheme = game.currentThemeIndex < game.themes.length - 1
 
-    const winnersText = (() => {
+    const resultText = (() => {
         if(!game.lastThemeResult) return ""
+
+        if(game.lastThemeResult.type === "tie") {
+            return "Empate! Todos pontuaram +1";
+        }
+
         const names = game.lastThemeResult.winnerIndexes
             .map((index) => setup.players[index]?.name)
             .filter(Boolean)
-        return names.join(" e ");
+        return `Ganhou: ${names.join(" e ")}`;
     })();
 
     function pickLetter(letter: string) {
@@ -98,13 +103,12 @@ export default function GameScreen() {
         {game.status === "theme_result" ? (
             <div className="gameFinished">
                 <h1>Fim do Tema</h1>
-                <p style={{ marginTop: 8 }}>
-                    {winnersText ? (
-                        <>
-                            <strong>Ganhou:</strong> {winnersText}
-                        </>
-                    ) : null}
+
+                {resultText ? (
+                    <p style={{ marginTop: 8 }}>
+                    <strong>{resultText}</strong>
                 </p>
+                ) : null}
 
                 <div className="gameFinished__score" style={{ marginTop: 16 }}>
                     {sortedScore.map((p) => (
@@ -127,9 +131,9 @@ export default function GameScreen() {
             <div className="gameFinished">
             <h1>Placar Final</h1>
 
-            {winnersText ? (
+            {resultText ? (
                 <p style={{ marginTop: 8 }}>
-                    <strong>Último tema:</strong> ganhou {winnersText}
+                    <strong>{resultText}</strong>
                 </p>
             ) : null}
 

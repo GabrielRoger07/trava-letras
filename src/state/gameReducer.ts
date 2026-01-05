@@ -95,6 +95,28 @@ export function gameReducer(state: GlobalState, action: Action): GlobalState {
             };
         });
 
+        const updatedTheme = themes[state.game.currentThemeIndex];
+        const totalLetters = state.setup.activeLetters.length;
+
+        const exhausted = totalLetters > 0 && updatedTheme.usedLetters.length >= totalLetters;
+
+        if(exhausted){
+            const players = state.setup.players.map((p) => ({ ...p, wins: p.wins + 1 }));
+            const isLastTheme = state.game.currentThemeIndex >= state.game.themes.length - 1;
+
+            return {
+                ...state,
+                setup: { ...state.setup, players },
+                game: {
+                    ...state.game,
+                    themes,
+                    status: isLastTheme ? "finished" : "theme_result",
+                    lastThemeResult: { type: "tie"},
+                    turn: state.game.turn + 1
+                }
+            };
+        }
+
         return {
             ...state,
             game: {
@@ -128,7 +150,7 @@ export function gameReducer(state: GlobalState, action: Action): GlobalState {
             game: {
             ...state.game,
             status: isLastTheme ? "finished" : "theme_result",
-            lastThemeResult: { loserIndex, winnerIndexes },
+            lastThemeResult: { type: "loss", loserIndex, winnerIndexes },
             turn: state.game.turn + 1,
             },
         };
