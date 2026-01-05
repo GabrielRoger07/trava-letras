@@ -1,10 +1,5 @@
-function App() {
+import { AppRouter } from "./router"
 
-  return (
-    <>
-      <h1>Trava Letras</h1>
-    </>
-  )
+export default function App() {
+  return <AppRouter />
 }
-
-export default App
