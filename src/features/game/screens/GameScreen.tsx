@@ -1,11 +1,110 @@
+import { useMemo } from "react";
 import { useNavigate } from "react-router-dom";
+import { Button } from "../../../components/ui/Button";
+import { useGame } from "../../../state/useGame";
+import { LetterGrid } from "../components/LetterGrid";
+import { TurnTimer } from "../components/TurnTimer";
+import { useTurnTimer } from "../hooks/useTurnTimer";
+import "./GameScreen.css"
 
 export default function GameScreen() {
     const navigate = useNavigate()
+    const {state, dispatch} = useGame()
+
+    const {setup, game} = state
+
+    const sortedScore = useMemo(() => {
+        return [...setup.players].sort((a, b) => b.wins - a.wins)
+    }, [setup.players])
+
+    const { remaining } = useTurnTimer({
+        seconds: setup.secondsPerTurn,
+        onExpire: () => dispatch({type: "LOSE_TURN"})
+    })
+
+    if(game.status === "setup"){
+        return (
+            <div className="page gameScreen">
+                <h1>Jogo</h1>
+                <p>Você precisa iniciar o jogo antes.</p>
+                <Button onClick={() => navigate("/")}>Voltar ao início</Button>
+            </div>
+        )
+    }
+
+    const currentPlayer = setup.players[game.currentPlayerIndex]
+    const currentTheme = game.themes[game.currentThemeIndex]
+
+    const usedLetters = currentTheme?.usedLetters ?? []
+    const allUsed = usedLetters.length >= 26
+
+    const canGoNextTheme = allUsed && game.status === "playing"
+
+    function pickLetter(letter: string) {
+        if(game.status !== "playing") return
+        dispatch({type: "PICK_LETTER", payload: letter})
+    }
+
+    function loseTurn() {
+        if(game.status !== "playing") return
+        dispatch({type: "LOSE_TURN"})
+    }
+
+    function nextTheme() {
+        dispatch({type: "NEXT_THEME"})
+    }
 
     return (
-        <div className="page">
-            <h1>Jogo</h1>
+        <div className="page gameScreen">
+            <header className="gameHeader">
+                <div className="gameHeader__left">
+                    <div className="gameHeader__theme">{currentTheme?.name ?? "-"}</div>
+                    <div className="gameHeader__progress">{game.currentThemeIndex + 1} de {game.themes.length}</div>
+                </div>
+
+                <div className="gameHeader__right">
+                    <Button variant="secondary" onClick={() => navigate("/")}>Sair</Button>
+                </div>
+            </header>
+
+            {game.status === "finished" ? (
+                <div className="gameFinished">
+                    <h1>Fim do Jogo</h1>
+                    <div className="gameFinished__score">
+                        {sortedScore.map((p) => (
+                            <div key={p.id} className="gameFinished__row">
+                                <span>{p.name}</span>
+                                <strong>{p.wins}</strong>
+                            </div>
+                        ))}
+                    </div>
+
+                    <Button onClick={() => navigate("/")}>Voltar ao Início</Button>
+                </div>
+            ) : (
+                <>
+                    <div key={game.turn}>
+                        <TurnTimer 
+                            playerName={currentPlayer?.name ?? "-"}
+                            remaining={remaining}
+                            instruction="Fale a palavra e toque na letra usada"
+                        />
+                    </div>
+
+                    <div className="gameGrid">
+                        <LetterGrid usedLetters={usedLetters} onPick={pickLetter} />
+                    </div>
+
+                    <div className="gameActions">
+                        <Button variant="secondary" onClick={loseTurn}>Perdi / Pular</Button>
+                        <Button disabled={!canGoNextTheme} onClick={nextTheme}>Próximo Tema</Button>
+                    </div>
+
+                    <div className="gameHint">
+                        Letras usadas: {usedLetters.length}/26
+                    </div>
+                </>
+            )}
 
             <button onClick={() => navigate("/")}>Voltar ao Início</button>
         </div>

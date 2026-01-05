@@ -1,0 +1,52 @@
+.gameScreen {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.gameHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.gameHeader__theme {
+  font-weight: 800;
+  font-size: 18px;
+}
+
+.gameHeader__progress {
+  opacity: 0.7;
+  font-size: 13px;
+  margin-top: 2px;
+}
+
+.gameGrid {
+  margin-top: 6px;
+}
+
+.gameActions {
+  display: flex;
+  gap: 12px;
+  margin-top: 12px;
+}
+
+.gameHint {
+  opacity: 0.7;
+  text-align: center;
+  font-size: 13px;
+}
+
+.gameFinished__score {
+  display: grid;
+  gap: 10px;
+  margin: 16px 0 20px;
+}
+
+.gameFinished__row {
+  display: flex;
+  justify-content: space-between;
+  padding: 12px 14px;
+  border-radius: 12px;
+  border: 1px solid #ddd;
+}

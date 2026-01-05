@@ -20,6 +20,7 @@ export type GameState = {
     currentThemeIndex: number;
     themes: ThemeState[];
     status: "setup" | "playing" | "finished";
+    turn: number;
 }
 
 export type GlobalState = {
