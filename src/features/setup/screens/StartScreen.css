@@ -1,0 +1,117 @@
+.start {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 28px 18px;
+    background:
+        radial-gradient(900px 500px at 50% -40%, rgba(99, 102, 241, 0.22), transparent 55%),
+        radial-gradient(700px 450px at 50% 120%, rgba(124, 58, 237, 0.12), transparent 60%),
+        #f7f8fc;
+}
+
+.start__content {
+    width: 100%;
+    max-width: 420px;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    min-height: 82vh;
+}
+
+.start__hero {
+    text-align: center;
+    margin-top: 8vh;
+}
+
+.start__logo {
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 18px;
+    border-radius: 18px;
+    display: grid;
+    place-items: center;
+    font-size: 22px;
+    color: #fff;
+    background: linear-gradient(135deg, #4f46e5, #7c3aed);
+    box-shadow: 0 14px 30px rgba(79, 70, 220, 0.35);
+}
+
+.start__title {
+    margin: 0;
+    font-size: 58px;
+    line-height: 1.05;
+    letter-spacing: -0.02em;
+    font-weight: 900;
+    background: linear-gradient(90deg, #4f46e5 0%, #6366f1 60%, #7c3aed 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+.start__subtitle {
+    margin: 12px auto 0;
+    max-width: 280px;
+    font-size: 20px;
+    line-height: 1.4;
+    opacity: 0.72;
+}
+
+.start__actions {
+    margin-top: auto;
+    display: grid;
+    gap: 14px;
+}
+
+.start__actions :global(button),
+.start__actions button {
+    width: 100%;
+}
+
+.start__howTo {
+    border: none;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px 12px;
+    font-weight: 700;
+    font-size: 16px;
+    cursor: pointer;
+    color: #0f172a;
+    opacity: 0.85;
+}
+
+.start__howTo:hover {
+    opacity: 1;
+}
+
+.start__howToIcon {
+    width: 24px;
+    height: 22px;
+    border-radius: 999px;
+    border: 1px solid rgba(15, 23, 42, 0.25);
+    display: inline-grid;
+    place-items: center;
+    font-size: 13px;
+    font-weight: 900;
+}
+
+.start__footer {
+    margin-top: 18px;
+    text-align: center;
+    font-size: 15px;
+    opacity: 0.7;
+    padding-bottom: 6px;
+}
+
+.start__sparkle {
+    margin-right: 6px;
+}
+
+.start__play {
+    margin-right: 10px;
+    font-size: 16px;
+    line-height: 0;
+}

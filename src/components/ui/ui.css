@@ -1,10 +1,11 @@
 .btn {
   border: none;
-  border-radius: 12px;
-  padding: 14px 18px;
+  border-radius: 14px;
+  padding: 16px 18px;
   font-size: 16px;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
+  width: 100%;
 }
 
 .btn-primary {
@@ -15,6 +16,21 @@
 .btn-secondary {
   background: #eee;
   color: #111;
+}
+
+.btn-hero {
+  background: linear-gradient(90deg, #4f46e5 0%, #6366f1 55%, #7c3aed 100%);
+  color: #fff;
+  font-weight: 700;
+  box-shadow: 
+    0 14px 30px rgba(79, 70, 229, 0.35),
+    0 6px 12px rgba(99, 102, 241, 0.25);
+  padding: 18px 22px;
+  font-size: 18px;
+}
+
+.btn-hero:active {
+  transform: translateY(1px);
 }
 
 .btn:disabled {
