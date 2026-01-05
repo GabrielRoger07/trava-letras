@@ -15,12 +15,18 @@ export type ThemeState = {
     usedLetters: string[];
 }
 
+export type LastThemeResult = {
+    loserIndex: number,
+    winnerIndexes: number[]
+}
+
 export type GameState = {
     currentPlayerIndex: number;
     currentThemeIndex: number;
     themes: ThemeState[];
-    status: "setup" | "playing" | "finished";
+    status: "setup" | "playing" | "theme_result" | "finished";
     turn: number;
+    lastThemeResult: LastThemeResult | null;
 }
 
 export type GlobalState = {

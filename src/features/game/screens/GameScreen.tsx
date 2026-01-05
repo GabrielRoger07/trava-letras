@@ -27,7 +27,6 @@ function TurnTimerBlock({
 export default function GameScreen() {
     const navigate = useNavigate();
     const { state, dispatch } = useGame();
-
     const { setup, game } = state;
 
     const sortedScore = useMemo(() => {
@@ -50,6 +49,16 @@ export default function GameScreen() {
     const usedLetters = currentTheme?.usedLetters ?? [];
     const allUsed = usedLetters.length >= 26;
     const canGoNextTheme = allUsed && game.status === "playing";
+
+    const hasNextTheme = game.currentThemeIndex < game.themes.length - 1
+
+    const winnersText = (() => {
+        if(!game.lastThemeResult) return ""
+        const names = game.lastThemeResult.winnerIndexes
+            .map((index) => setup.players[index]?.name)
+            .filter(Boolean)
+        return names.join(" e ");
+    })();
 
     function pickLetter(letter: string) {
         if (game.status !== "playing") return;
@@ -82,11 +91,45 @@ export default function GameScreen() {
             </div>
         </header>
 
+        {game.status === "theme_result" ? (
+            <div className="gameFinished">
+                <h1>Fim do Tema</h1>
+                <p style={{ marginTop: 8 }}>
+                    {winnersText ? (
+                        <>
+                            <strong>Ganhou:</strong> {winnersText}
+                        </>
+                    ) : null}
+                </p>
+
+                <div className="gameFinished__score" style={{ marginTop: 16 }}>
+                    {sortedScore.map((p) => (
+                        <div key={p.id} className="gameFinished__row">
+                            <span>{p.name}</span>
+                            <strong>{p.wins}</strong>
+                        </div>
+                    ))}
+                </div>
+
+                <div style={{ marginTop: 16 }}>
+                    <Button onClick={nextTheme} disabled={!hasNextTheme}>
+                        Próximo Tema
+                    </Button>
+                </div>
+            </div>
+        ) : null}
+
         {game.status === "finished" ? (
             <div className="gameFinished">
-            <h1>Fim do Jogo</h1>
+            <h1>Placar Final</h1>
 
-            <div className="gameFinished__score">
+            {winnersText ? (
+                <p style={{ marginTop: 8 }}>
+                    <strong>Último tema:</strong> ganhou {winnersText}
+                </p>
+            ) : null}
+
+            <div className="gameFinished__score" style={{ marginTop: 16 }}>
                 {sortedScore.map((p) => (
                 <div key={p.id} className="gameFinished__row">
                     <span>{p.name}</span>
@@ -95,9 +138,14 @@ export default function GameScreen() {
                 ))}
             </div>
 
-            <Button onClick={() => navigate("/")}>Voltar ao Início</Button>
+            <div style={{ marginTop: 16 }}>
+                <Button onClick={() => navigate("/")}>Voltar ao Início</Button>
             </div>
-        ) : (
+
+            </div>
+        ) : null}
+
+        {game.status === "playing" ? (
             <>
             <div key={game.turn}>
                 <TurnTimerBlock
@@ -122,7 +170,7 @@ export default function GameScreen() {
 
             <div className="gameHint">Letras usadas: {usedLetters.length}/26</div>
             </>
-        )}
+        ) : null}
         </div>
     );
 }

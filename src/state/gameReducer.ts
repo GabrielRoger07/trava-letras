@@ -23,6 +23,7 @@ export const initialState: GlobalState = {
         themes: [],
         status: "setup",
         turn: 0,
+        lastThemeResult: null
     },
 };
 
@@ -62,6 +63,7 @@ export function gameReducer(state: GlobalState, action: Action): GlobalState {
                 name,
                 usedLetters: [],
             })),
+            lastThemeResult: null
             },
         };
         }
@@ -70,10 +72,9 @@ export function gameReducer(state: GlobalState, action: Action): GlobalState {
         if (state.game.status !== "playing") return state;
 
         const letter = action.payload.trim().toUpperCase();
-
         const theme = state.game.themes[state.game.currentThemeIndex];
-        if (!theme) return state;
 
+        if (!theme) return state;
         if (theme.usedLetters.includes(letter)) return state;
 
         const themes = state.game.themes.map((t, index) => {
@@ -99,38 +100,57 @@ export function gameReducer(state: GlobalState, action: Action): GlobalState {
         case "LOSE_TURN": {
         if (state.game.status !== "playing") return state;
 
-        const losingIndex = state.game.currentPlayerIndex;
+        const loserIndex = state.game.currentPlayerIndex;
 
-        const players = state.setup.players.map((player, index) => {
-            if (index === losingIndex) return player;
-            return { ...player, wins: player.wins + 1 };
-        });
+        const winnerIndexes = state.setup.players
+            .map((_, index) => index)
+            .filter((index) => index !== loserIndex)
+
+        const players = state.setup.players.map((player, index) => 
+            index === loserIndex ? player : { ...player, wins: player.wins + 1 }
+        );
+
+        const isLastTheme = state.game.currentThemeIndex >= state.game.themes.length - 1;
 
         return {
             ...state,
             setup: { ...state.setup, players },
             game: {
             ...state.game,
+            status: isLastTheme ? "finished" : "theme_result",
+            lastThemeResult: { loserIndex, winnerIndexes },
             turn: state.game.turn + 1,
-            currentPlayerIndex: (losingIndex + 1) % players.length,
             },
         };
         }
 
         case "NEXT_THEME": {
-        const nextThemeIndex = state.game.currentThemeIndex + 1;
-        const finished = nextThemeIndex >= state.game.themes.length;
+            if(state.game.status !== "theme_result") return state
 
-        return {
-            ...state,
-            game: {
-            ...state.game,
-            currentThemeIndex: finished ? state.game.currentThemeIndex : nextThemeIndex,
-            currentPlayerIndex: finished ? state.game.currentPlayerIndex : 0,
-            status: finished ? "finished" : state.game.status,
-            turn: finished ? state.game.turn : state.game.turn + 1,
-            },
-        };
+            const nextThemeIndex = state.game.currentThemeIndex + 1;
+            const finished = nextThemeIndex >= state.game.themes.length;
+
+            if(finished) {
+                return {
+                    ...state,
+                    game: {
+                        ...state.game,
+                        status: "finished"
+                    }
+                }
+            }
+
+            return {
+                ...state,
+                game: {
+                ...state.game,
+                status: "playing",
+                currentThemeIndex: nextThemeIndex,
+                currentPlayerIndex: 0,
+                lastThemeResult: null,
+                turn: state.game.turn + 1,
+                },
+            };
         }
 
         case "RESET_GAME":
