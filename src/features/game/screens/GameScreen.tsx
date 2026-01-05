@@ -35,10 +35,14 @@ export default function GameScreen() {
 
     if (game.status === "setup") {
         return (
-        <div className="page gameScreen">
-            <h1>Jogo</h1>
-            <p>Você precisa iniciar o jogo antes.</p>
-            <Button onClick={() => navigate("/")}>Voltar ao início</Button>
+        <div className="page game">
+            <main className="game__content">
+                <h1 className="game__title">Jogo</h1>
+                <p className="game__subtitle">Você precisa iniciar o jogo antes.</p>
+                <div style={{ marginTop: 16 }}>
+                    <Button variant="hero" onClick={() => navigate("/")}>Voltar ao início</Button>
+                </div>
+            </main>
         </div>
         );
     }
@@ -47,11 +51,7 @@ export default function GameScreen() {
     const currentTheme = game.themes[game.currentThemeIndex];
 
     const usedLetters = currentTheme?.usedLetters ?? [];
-    const activeLetters = setup.activeLetters;
-    const allUsed = usedLetters.length >= activeLetters.length;
-    const canGoNextTheme = allUsed && game.status === "playing";
-
-    const hasNextTheme = game.currentThemeIndex < game.themes.length - 1
+    const activeLetters = setup.activeLetters.length ? setup.activeLetters : "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
     const resultText = (() => {
         if(!game.lastThemeResult) return ""
@@ -71,117 +71,104 @@ export default function GameScreen() {
         dispatch({ type: "PICK_LETTER", payload: letter });
     }
 
-    function loseTurn() {
-        if (game.status !== "playing") return;
-        dispatch({ type: "LOSE_TURN" });
-    }
-
-    function nextTheme() {
-        dispatch({ type: "NEXT_THEME" });
+    function exitGame() {
+        dispatch({ type: "RESET_GAME" });
+        navigate("/");
     }
 
     return (
-        <div className="page gameScreen">
-        <header className="gameHeader">
-            <div className="gameHeader__left">
-            <div className="gameHeader__theme">{currentTheme?.name ?? "-"}</div>
-            <div className="gameHeader__progress">
-                {game.currentThemeIndex + 1} de {game.themes.length}
-            </div>
+        <div className="page game">
+        <header className="game__topbar">
+            <div className="game__topbarLeft">
+                <div className="game__theme">{currentTheme?.name ?? "-"}</div>
+                <div className="game__themeSub">
+                    Tema {game.currentThemeIndex + 1} de {game.themes.length}
+                </div>
             </div>
 
-            <div className="gameHeader__right">
-            <Button variant="secondary" onClick={() => {
-                dispatch({ type: "RESET_GAME" })
-                navigate("/")
-            }}>
+            <button type="button" className="game__exit" onClick={exitGame}>
                 Sair
-            </Button>
-            </div>
+            </button>
         </header>
 
         {game.status === "theme_result" ? (
-            <div className="gameFinished">
-                <h1>Fim do Tema</h1>
+            <main className="game__content">
+                <div className="game__panel">
+                    <h1 className="game__panelTitle">Fim do Tema</h1>
+                
+                    {resultText ? (
+                        <p className="game__panelSubtitle">
+                        <strong>{resultText}</strong>
+                    </p>
+                    ) : null}
 
-                {resultText ? (
-                    <p style={{ marginTop: 8 }}>
-                    <strong>{resultText}</strong>
-                </p>
-                ) : null}
-
-                <div className="gameFinished__score" style={{ marginTop: 16 }}>
-                    {sortedScore.map((p) => (
-                        <div key={p.id} className="gameFinished__row">
-                            <span>{p.name}</span>
-                            <strong>{p.wins}</strong>
-                        </div>
-                    ))}
+                    <div className="game__score">
+                        {sortedScore.map((p) => (
+                            <div key={p.id} className="game__scoreRow">
+                                <span className="game__scoreName">{p.name}</span>
+                                <strong className="game__scoreValue">{p.wins}</strong>
+                            </div>
+                        ))}
+                    </div>
                 </div>
-
-                <div style={{ marginTop: 16 }}>
-                    <Button onClick={nextTheme} disabled={!hasNextTheme}>
-                        Próximo Tema
-                    </Button>
-                </div>
-            </div>
+            </main>
         ) : null}
 
         {game.status === "finished" ? (
-            <div className="gameFinished">
-            <h1>Placar Final</h1>
+            <main className="game__content">
+                <div className="game__panel">
+                    <h1 className="game__panelTitle">Placar Final</h1>
 
-            {resultText ? (
-                <p style={{ marginTop: 8 }}>
-                    <strong>{resultText}</strong>
-                </p>
-            ) : null}
+                    {resultText ? (
+                        <p className="game__panelSubtitle">
+                            <strong>{resultText}</strong>
+                        </p>
+                    ) : null}
 
-            <div className="gameFinished__score" style={{ marginTop: 16 }}>
-                {sortedScore.map((p) => (
-                <div key={p.id} className="gameFinished__row">
-                    <span>{p.name}</span>
-                    <strong>{p.wins}</strong>
+                    <div className="game__score">
+                        {sortedScore.map((p) => (
+                        <div key={p.id} className="game__scoreRow">
+                            <span className="game__scoreName">{p.name}</span>
+                            <strong className="game__scoreValue">{p.wins}</strong>
+                        </div>
+                        ))}
+                    </div>
+
+                    <div className="game__panelActions">
+                        <Button variant="hero" onClick={exitGame}>
+                            Voltar ao Início
+                        </Button>
+                    </div>
                 </div>
-                ))}
-            </div>
-
-            <div style={{ marginTop: 16 }}>
-                <Button onClick={() => {
-                    dispatch({ type: "RESET_GAME" })
-                    navigate("/")
-                }}>
-                    Voltar ao Início
-                </Button>
-            </div>
-
-            </div>
+            </main>
         ) : null}
 
         {game.status === "playing" ? (
             <>
-            <div key={game.turn}>
-                <TurnTimerBlock
-                    seconds={setup.secondsPerTurn}
-                    playerName={currentPlayer?.name ?? "-"}
-                    onExpire={() => dispatch({ type: "LOSE_TURN" })}
-                />
-            </div>
+                <main className="game__content">
+                    <div key={game.turn} className="game_timerWrap">
+                        <TurnTimerBlock
+                            seconds={setup.secondsPerTurn}
+                            playerName={currentPlayer?.name ?? "-"}
+                            onExpire={() => dispatch({ type: "LOSE_TURN" })}
+                        />
+                    </div>
 
-            <div className="gameGrid">
-                <LetterGrid letters={activeLetters} usedLetters={usedLetters} onPick={pickLetter} />
-            </div>
+                    <div className="game_gridWrap">
+                        <LetterGrid letters={activeLetters} usedLetters={usedLetters} onPick={pickLetter} />
+                    </div>
+                </main>
 
-            <div className="gameActions">
-                <Button variant="secondary" onClick={loseTurn}>
-                Perdi / Pular
-                </Button>
-                <Button disabled={!canGoNextTheme} onClick={nextTheme}>
-                Próximo Tema
-                </Button>
-            </div>
-
-            <div className="gameHint">Letras usadas: {usedLetters.length}/{activeLetters.length}</div>
+                <footer className="game__footer">
+                    <div className="game__footerInner">
+                        <div className="game__meta" aria-live="polite">
+                            <strong className="game__metaNumber">{usedLetters.length}</strong>
+                            <span className="game__metaDivider">/</span>
+                            <span className="game__metaTotal">{activeLetters.length}</span>
+                            <span className="game__metaLabel">letras usadas</span>
+                        </div>
+                    </div>
+                </footer>
             </>
         ) : null}
         </div>
