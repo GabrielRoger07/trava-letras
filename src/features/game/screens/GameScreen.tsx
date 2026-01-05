@@ -54,6 +54,7 @@ export default function GameScreen() {
     const activeLetters = setup.activeLetters.length ? setup.activeLetters : "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
 
     const hasNextTheme = game.currentThemeIndex < game.themes.length - 1;
+    const hasMultipleThemes = game.themes.length > 1;
 
     const resultText = (() => {
         if(!game.lastThemeResult) return ""
@@ -67,6 +68,27 @@ export default function GameScreen() {
             .filter(Boolean)
         return `Ganhou: ${names.join(" e ")}`;
     })();
+
+    const topScore = sortedScore[0]?.wins ?? 0;
+    const leaders = sortedScore.filter((p) => p.wins === topScore);
+    const isOverallTie = leaders.length > 1;
+
+    const overallText = isOverallTie ? `Empate no total (${leaders.map((p) => p.name).filter(Boolean).join(" e ")} com ${topScore})`
+    : `Campeão: ${leaders[0]?.name ?? "-"} (${topScore})`;
+
+    const lastThemeText = (() => {
+        if(!game.lastThemeResult) return "";
+
+        if(game.lastThemeResult.type === "tie") {
+            return "Último tema: empate (+1 para todos)";
+        }
+
+        const names = game.lastThemeResult.winnerIndexes
+            .map((index) => setup.players[index]?.name)
+            .filter(Boolean);
+
+        return `Último tema: venceu ${names.join(" e ")} (+1)`
+    })()
 
     function pickLetter(letter: string) {
         if (game.status !== "playing") return;
@@ -129,10 +151,16 @@ export default function GameScreen() {
                 <div className="game__panel">
                     <h1 className="game__panelTitle">Placar Final</h1>
 
-                    {resultText ? (
-                        <p className="game__panelSubtitle">
-                            <strong>{resultText}</strong>
-                        </p>
+                    {hasMultipleThemes ? (
+                        <>
+                            <p className="game__panelSubtitle">
+                                <strong>{overallText}</strong>
+                            </p>
+
+                            {lastThemeText ? (
+                                <p className="game__panelSubtle">{lastThemeText}</p>
+                            ) : null}
+                        </>
                     ) : null}
 
                     <div className="game__score">
