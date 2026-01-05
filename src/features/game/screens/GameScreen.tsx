@@ -85,7 +85,10 @@ export default function GameScreen() {
             </div>
 
             <div className="gameHeader__right">
-            <Button variant="secondary" onClick={() => navigate("/")}>
+            <Button variant="secondary" onClick={() => {
+                dispatch({ type: "RESET_GAME" })
+                navigate("/")
+            }}>
                 Sair
             </Button>
             </div>
@@ -139,7 +142,12 @@ export default function GameScreen() {
             </div>
 
             <div style={{ marginTop: 16 }}>
-                <Button onClick={() => navigate("/")}>Voltar ao Início</Button>
+                <Button onClick={() => {
+                    dispatch({ type: "RESET_GAME" })
+                    navigate("/")
+                }}>
+                    Voltar ao Início
+                </Button>
             </div>
 
             </div>
