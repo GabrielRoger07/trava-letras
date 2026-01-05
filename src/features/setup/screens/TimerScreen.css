@@ -1,19 +1,121 @@
 .timer {
+  min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  background: var(--bg-app);
+}
+
+.timer__topbar {
+  height: 54px;
+  display: grid;
+  grid-template-columns: 44px 1fr 44px;
+  align-items: center;
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(15, 23, 42, 0.06);
+  background: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(10px);
+}
+
+.timer__back {
+  width: 44px;
+  height: 44px;
+  border: none;
+  background: transparent;
+  font-size: 22px;
+  cursor: pointer;
+  color: var(--text);
+  opacity: 0.85;
+}
+
+.timer__back:active {
+  transform: translateY(1px);
+}
+
+.timer__topbarSpacer {
+  width: 44px;
+  height: 44px;
+}
+
+.timer__content {
+  width: 100%;
+  max-width: 420px;
+  margin: 0 auto;
+  padding: 18px 18px 110px;
+}
+
+.timer__header {
+  display: grid;
+  gap: 10px;
+  margin-top: 10px;
 }
 
 .timer__title {
   margin: 0;
+  font-size: 34px;
+  line-height: 1.05;
+  letter-spacing: -0.02em;
+  font-weight: 900;
+  color: var(--text);
+}
+
+.timer__subtitle {
+  margin: 0;
+  font-size: 16px;
+  line-height: 1.45;
+  opacity: 0.75;
+  color: var(--text);
+  font-weight: 500;
 }
 
 .timer__options {
-  margin-top: 8px;
+  margin-top: 18px;
 }
 
-.timer__actions {
-  display: flex;
-  gap: 12px;
-  margin-top: 8px;
+.timer__options .segmented {
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+
+.timer__options .segmented button {
+  height: 90px;
+  display: grid;
+  place-items: center;
+  padding: 10px 8px;
+}
+
+.timer__options .segmented button {
+  font-size: 28px;
+  font-weight: 900;
+}
+
+.timer__options .segmented button::after {
+  content: "segundos";
+  font-size: 12px;
+  font-weight: 800;
+  opacity: 0.6;
+  margin-top: -8px;
+}
+
+.timer__options .segmented button[aria-pressed="true"]::after,
+.timer__options .segmented button.active::after {
+  opacity: 0.85;
+}
+
+.timer__footer {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 0;
+
+  padding: 14px 16px 18px;
+  background: linear-gradient(
+    to top,
+    rgba(247, 248, 252, 1) 70%,
+    rgba(247, 248, 252, 0)
+  );
+}
+
+.timer__footerInner {
+  width: min(420px, 100%);
+  margin: 0 auto;
 }
