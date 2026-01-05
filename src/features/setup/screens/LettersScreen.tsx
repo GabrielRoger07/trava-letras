@@ -92,7 +92,7 @@ export default function LettersScreen() {
                 <div className="letters__tip" role="note">
                     <span className="letters__tipIcon" aria-hidden="true">💡</span>
                     <span className="letters__tipText">
-                        <strong>Dica:</strong> As letras <strong>K, W</strong> e <strong>Y</strong> têm poucas palavaras em português.
+                        <strong>Dica:</strong> As letras <strong>K, W</strong> e <strong>Y</strong> têm poucas palavras em português.
                         Você pode removê-las para um jogo mais fluido.
                     </span>
                 </div>
