@@ -61,6 +61,7 @@
   width: 100%;
   max-width: 420px;
   margin: 0 auto;
+  padding: 0 18px;
   padding-bottom: clamp(6rem, 18vh, 8rem);
   overflow-y: auto;
 }
