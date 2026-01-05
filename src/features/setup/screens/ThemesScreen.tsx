@@ -61,10 +61,9 @@ export default function ThemesScreen() {
 
     const canStart = selectedThemes.length >= 1
 
-    function start() {
+    function next() {
         if(!canStart) return
-        dispatch({type: "START_GAME"})
-        navigate("/game")
+        navigate("/setup/letters")
     }
 
     return (
@@ -114,7 +113,7 @@ export default function ThemesScreen() {
 
             <div className="themes__actions">
                 <Button variant="secondary" onClick={() => navigate(-1)}>Voltar</Button>
-                <Button disabled={!canStart} onClick={start}>Iniciar Jogo</Button>
+                <Button disabled={!canStart} onClick={next}>Continuar</Button>
             </div>
         </div>
     )

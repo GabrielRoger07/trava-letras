@@ -47,7 +47,8 @@ export default function GameScreen() {
     const currentTheme = game.themes[game.currentThemeIndex];
 
     const usedLetters = currentTheme?.usedLetters ?? [];
-    const allUsed = usedLetters.length >= 26;
+    const activeLetters = setup.activeLetters;
+    const allUsed = usedLetters.length >= activeLetters.length;
     const canGoNextTheme = allUsed && game.status === "playing";
 
     const hasNextTheme = game.currentThemeIndex < game.themes.length - 1
@@ -164,7 +165,7 @@ export default function GameScreen() {
             </div>
 
             <div className="gameGrid">
-                <LetterGrid usedLetters={usedLetters} onPick={pickLetter} />
+                <LetterGrid letters={activeLetters} usedLetters={usedLetters} onPick={pickLetter} />
             </div>
 
             <div className="gameActions">
@@ -176,7 +177,7 @@ export default function GameScreen() {
                 </Button>
             </div>
 
-            <div className="gameHint">Letras usadas: {usedLetters.length}/26</div>
+            <div className="gameHint">Letras usadas: {usedLetters.length}/{activeLetters}</div>
             </>
         ) : null}
         </div>

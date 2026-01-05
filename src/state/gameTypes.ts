@@ -8,6 +8,7 @@ export type SetupState = {
     players: Player[];
     secondsPerTurn: number;
     themes: string[];
+    activeLetters: string[];
 }
 
 export type ThemeState = {

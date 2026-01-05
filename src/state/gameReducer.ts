@@ -1,9 +1,12 @@
 import type { GlobalState, Player } from "./gameTypes";
 
+const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+
 export type Action =
     | { type: "SET_PLAYERS"; payload: Player[] }
     | { type: "SET_TIMER"; payload: number }
     | { type: "SET_THEMES"; payload: string[] }
+    | { type: "SET_ACTIVE_LETTERS"; payload: string[] }
     | { type: "START_GAME" }
     | { type: "PICK_LETTER"; payload: string }
     | { type: "LOSE_TURN" }
@@ -16,6 +19,7 @@ export const initialState: GlobalState = {
         players: [],
         secondsPerTurn: 10,
         themes: [],
+        activeLetters: ALPHABET
     },
     game: {
         currentPlayerIndex: 0,
@@ -45,6 +49,12 @@ export function gameReducer(state: GlobalState, action: Action): GlobalState {
         return {
             ...state,
             setup: { ...state.setup, themes: action.payload },
+        };
+
+        case "SET_ACTIVE_LETTERS":
+        return {
+            ...state,
+            setup: { ...state.setup, activeLetters: action.payload },
         };
 
         case "START_GAME": {

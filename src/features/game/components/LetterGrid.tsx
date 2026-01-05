@@ -1,18 +1,17 @@
 import "./LetterGrid.css";
 
-const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-
 type Props = {
+  letters: string[];
   usedLetters: string[];
   onPick: (letter: string) => void;
 };
 
-export function LetterGrid({ usedLetters, onPick }: Props) {
+export function LetterGrid({ letters, usedLetters, onPick }: Props) {
   const usedSet = new Set(usedLetters);
 
   return (
     <div className="letterGrid">
-      {ALPHABET.map((letter) => {
+      {letters.map((letter) => {
         const isUsed = usedSet.has(letter);
 
         return (
