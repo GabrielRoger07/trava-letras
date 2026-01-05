@@ -5,12 +5,23 @@ import { Button } from "../../../components/ui/Button";
 import "./LettersScreen.css"
 
 const ALPHABET = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("")
+const HARD_LETTERS = ["K", "W", "Y"]
+
+function StepDots({total, current} : { total: number, current: number}) {
+    return (
+        <div className="step-dots" aria-label={`Etapa ${current} de ${total}`}>
+            {Array.from({ length: total }).map((_, index) => (
+                <span key={index} className={`step-dot ${index + 1 === current ? "active" : ""}`} aria-hidden="true" />
+            ))}
+        </div>
+    )
+}
 
 export default function LettersScreen() {
     const navigate = useNavigate();
     const { state, dispatch } = useGame();
 
-    const activeLetters = state.setup.activeLetters;
+    const activeLetters = state.setup.activeLetters?.length ? state.setup.activeLetters : ALPHABET;
 
     const activeSet = useMemo(() => new Set(activeLetters), [activeLetters]);
 
@@ -32,11 +43,13 @@ export default function LettersScreen() {
     }
 
     function selectCommonOnly() {
-        const common = ALPHABET.filter((l) => !["K", "W", "Y"].includes(l));
+        const common = ALPHABET.filter((l) => !HARD_LETTERS.includes(l));
         dispatch({ type: "SET_ACTIVE_LETTERS", payload: common })
     }
 
-    const canStart = activeLetters.length >= 1;
+    const total = ALPHABET.length
+    const selected = activeLetters.length
+    const canStart = selected >= 1;
 
     function start() {
         if(!canStart) return
@@ -46,33 +59,55 @@ export default function LettersScreen() {
 
     return (
         <div className="page letters">
-            <h1 className="letters__title">Letras do Jogo</h1>
-            <p className="letters__subtitle">
-                Toque para desativar letras difíceis (ex.: K, W, Y). Pelo menos 1 letra deve ficar ativa.
-            </p>
+            <header className="letters__topbar">
+                <button type="button" className="letters__back" onClick={() => navigate(-1)} aria-label="Voltar">←</button>
+                <StepDots total={4} current={4}/>
+                <div className="letters__topbarSpacer" aria-hidden="true" />
+            </header>
 
-            <div className="letters__grid">
-                {ALPHABET.map((letter) => {
-                    const isOn = activeSet.has(letter);
-                    return (
-                        <button key={letter} type="button" className={`letters__btn ${isOn ? "is-on" : "is-off"}`} onClick={() => toggleLetter(letter)}>{letter}</button>
-                    )
-                })}
-            </div>
+            <main className="letters__content">
+                <div className="letters__header">
+                    <h1 className="letters__title">Letras do Jogo</h1>
+                    <p className="letters__subtitle">Escolha quais letras farão parte do jogo</p>
+                </div>
 
-            <div className="letters__meta">
-                {activeLetters.length} letra{activeLetters.length === 1 ? "": "s"} ativa{activeLetters.length === 1 ? "": "s"}
-            </div>
-            
-            <div className="letters__quick">
-                <button type="button" className="letters__link" onClick={selectAll}>Selecionar Todas</button>
-                <button type="button" className="letters__link" onClick={selectCommonOnly}>Remover K/W/Y</button>
-            </div>
+                <section className="letters__grid" aria-label="Selecionar letras">
+                    {ALPHABET.map((letter) => {
+                        const isOn = activeSet.has(letter);
+                        return (
+                            <button key={letter} type="button" className={`letters__btn ${isOn ? "is-on" : "is-off"}`} onClick={() => toggleLetter(letter)} aria-pressed={isOn}>
+                                {letter}
+                            </button>
+                        )
+                    })}
+                </section>
 
-            <div className="letters__actions">
-                <Button variant="secondary" onClick={() => navigate(-1)}>Voltar</Button>
-                <Button disabled={!canStart} onClick={start}>Iniciar Jogo</Button>
-            </div>
+                <div className="letters__countCard" aria-live="polite">
+                    <strong className="letters__countNumber">{selected}</strong>
+                    <span className="letters__countDivider">/</span>
+                    <span className="letters__countTotal">{total}</span>
+                    <span className="letters__countLabel">letras selecionadas</span>
+                </div>
+                
+                <div className="letters__tip" role="note">
+                    <span className="letters__tipIcon" aria-hidden="true">💡</span>
+                    <span className="letters__tipText">
+                        <strong>Dica:</strong> As letras <strong>K, W</strong> e <strong>Y</strong> têm poucas palavaras em português.
+                        Você pode removê-las para um jogo mais fluido.
+                    </span>
+                </div>
+
+                <div className="letters__quick">
+                    <button type="button" className="letters__pill" onClick={selectAll}>Selecionar Todas</button>
+                    <button type="button" className="letters__pill" onClick={selectCommonOnly}>Remover K/W/Y</button>
+                </div>
+            </main>
+
+            <footer className="letters__footer">
+                <div className="letters__footerInner">
+                    <Button variant="hero" disabled={!canStart} onClick={start}>Iniciar Jogo 🎮</Button>
+                </div>
+            </footer>
         </div>
     )
 }

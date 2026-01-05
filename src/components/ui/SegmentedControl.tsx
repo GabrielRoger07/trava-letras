@@ -6,9 +6,9 @@ type Option<T extends string | number> = {
 }
 
 type SegmentedControlProps<T extends string | number> = {
-  options: Option<T>[];
-  value: T;
-  onChange: (value: T) => void;
+    options: Option<T>[];
+    value: T;
+    onChange: (value: T) => void;
 };
 
 export function SegmentedControl<T extends string | number>({
