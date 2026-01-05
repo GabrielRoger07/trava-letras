@@ -7,6 +7,8 @@ type Props = {
 };
 
 export function TurnTimer({ playerName, remaining, instruction }: Props) {
+  const isDanger = remaining <= 3;
+
   return (
     <div className="turnTimer">
       <div className="turnTimer__label">Vez de</div>
@@ -14,7 +16,7 @@ export function TurnTimer({ playerName, remaining, instruction }: Props) {
           <span className="turnTimer__nameText">{playerName}</span>
       </div>
 
-      <div className="turnTimer__time" aria-live="polite">
+      <div className={`turnTimer__time ${isDanger ? "turnTimer__time--danger" : ""}`} aria-live="polite">
         {String(remaining).padStart(2, "0")}
       </div>
 
