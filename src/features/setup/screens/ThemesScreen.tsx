@@ -87,7 +87,7 @@ export default function ThemesScreen() {
             <main className="themes__content">
                 <div className="themes__header">
                     <h1 className="themes__title">Temas do Jogo</h1>
-                    <p className="themes_subtitle">Escolha pelo menos 1 tema</p>
+                    <p className="themes__subtitle">Escolha pelo menos 1 tema</p>
                 </div>
 
                 <div className="themes__list">

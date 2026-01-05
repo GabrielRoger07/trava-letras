@@ -2,7 +2,7 @@
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  gap: var(--bg-app);
+  background: var(--bg-app);
 }
 
 .themes__topbar {
@@ -86,7 +86,7 @@
   box-shadow: var(--shadow-card);
   cursor: pointer;
   text-align: left;
-  transition: transform 0.05s ease, filter 0.15s ease, border-color 0.15s ease;
+  transition: transform 0.05s ease, filter 0.15s ease, border-color 0.15s ease, background 0.15s ease;
 }
 
 .themes__row:active {
@@ -96,7 +96,7 @@
 .themes__row--checked {
   border-color: rgba(99, 102, 241, 0.45);
   background: rgba(99, 102, 241, 0.08);
-  box-shadow: 0 18px 30px rgba(79, 70, 229, 0.10) var(--shadow-card);
+  box-shadow: var(--shadow-card);
 }
 
 .themes__checkbox {
@@ -166,7 +166,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 10px;
-  margin-top: 6px;
+  margin-top: 10px;
 }
 
 .themes__chip {
@@ -204,8 +204,8 @@
   border-radius: 16px;
   padding: 14px 16px;
   text-align: center;
-  background: rgba(124, 58, 237, 0.08);
-  border: 1px solid rgba(124, 58, 237, 0.14);
+  background: rgba(99, 102, 241, 0.10);
+  border: 1px solid rgba(99, 102, 241, 0.18);
 }
 
 .themes__countNumber {
