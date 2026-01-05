@@ -5,7 +5,10 @@ import { TextInput } from "../../../components/ui/TextInput";
 import { useGame } from "../../../state/useGame";
 import "./ThemesScreen.css"
 
-const PRESET_THEMES = ["Países", "Animais", "Filmes", "Times de Futebol", "Comidas"]
+const PRESET_THEMES = ["Herói🦸🏻 ou vilão🦹", "Personagem histórico📚", "Algo de metal🎸", "Algo relacionado ao México", "Ator/Atriz", "Ingrediente🍲",
+    "Algo que se encontra no cinema🎥", "⁠Bebida🧃", "Algo macio", "Palavras terminadas em vogal", "Algo peludo🐻", "Algo que se encontra na praia",
+    "Algo assustador", "País", "Objeto", "Profissão", "Item de festa🎈", "Nome", "Algo que usa pilha"
+]
 
 function StepDots({total, current} : { total: number, current: number}) {
     return (
